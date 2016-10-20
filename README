@@ -47,7 +47,7 @@ DESCRIPTION
         Explanation on this...
 
 SEE ALSO
-    Arctica::Telekinesis::Client, perl.
+    Arctica::Telekinesis::Server, perl.
 
 AUTHOR
     AUTHOR_FULLNAME <AUTHOR_MAILADDRESS>
