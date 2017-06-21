@@ -149,10 +149,20 @@ sub target_spawn {
 	
 	print "Spawning target:\t$app_id\n$ttid\n";
 	if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'service'} eq 'multimedia') {
-# obviously want to do this in a more elegant and generic fashion! (but Mother::Forker is a bit overkill here since we're going to chitchat on the j.buz)
+		if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'tmplnkid'}) {#TMP GARBAGE 
+			print "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n\n\nYAY IT MADE IT THIS FAR\nID:\t$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'tmplnkid'}\n\n";
+
+#			sleep 10;
+# obviously want to do this in a more elegant and generic fashion! (but Mother::Forker is a bit overkill here since we're going to chitchat on JABus)
+
 #print "<<<<<<<<<<<<<SPAWN>>>>>>>>>>>>>>>>\n";
+
 #		my $pid = open(my $fh,"|-",'./forkedmmoverlay.pl',$app_id,$ttid,$self->{'socks'}{'local'}{'_socket_id'});
-		system("forkedmmoverlay.pl $app_id $ttid $self->{'socks'}{'local'}{'_socket_id'} &");
+
+		        if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'tmplnkid'} =~ /^([a-zA-Z0-9\_\-]*)$/) {
+				system("forkedmmoverlay.pl $app_id $ttid $self->{'socks'}{'local'}{'_socket_id'} $1 &");
+			}
+                }
 	} else {
 		warn("Unknown service $self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'service'}");
 	}
@@ -205,7 +215,7 @@ sub target_state_change {
 		}
 
 		if ($data->{'data'}{'t'}) {
-			print "DATA/T:\n";
+			warn("DATA/T:");
 			foreach my $ttid (keys $data->{'data'}{'t'}) {
 				print "\t$ttid\n";
 				if ($data->{'data'}{'t'}{$ttid} and $self->{'running_apps'}{$app_id}{'targets'}{$ttid}) {
@@ -213,6 +223,10 @@ sub target_state_change {
 					foreach my $key (keys $data->{'data'}{'t'}{$ttid}) {
 						print "\t\t\tDEEPER 2:\t$key\n";
 						if ($data->{'data'}{'t'}{$ttid}{$key} ne $self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'}{$key}) {
+#							if  ($data->{'data'}{'t'}{$ttid}{'alive'}) {
+
+
+#							}
 							print "\t\t\t\tD3:\t[$data->{'data'}{'t'}{$ttid}{$key}]\t[$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'}{$key}]\n";
 							$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'}{$key} = $data->{'data'}{'t'}{$ttid}{$key};
 						}
@@ -231,6 +245,7 @@ sub target_state_change {
 }
 
 sub target_send_state_changes {
+	warn("STATE CHANGE????????????????????????????");# FUCK ME
 	my $self = $_[0];
 	my $app_id = $_[1];
 	my $ttid = $_[2];
@@ -241,11 +256,14 @@ sub target_send_state_changes {
 #		my %ws = $self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'};
 #		my $ts = $self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'};
 		
-		my $apx = ($self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'}{'of_x'}
-				+ $self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'}{'x'}
+		my $apx = (
+#				$self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'}{'of_x'} +
+				$self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'}{'x'}
 				+ $self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'}{'x'});
-		my $apy = ($self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'}{'of_y'}
-				+ $self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'}{'y'}
+
+		my $apy = (
+				#$self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'}{'of_y'}+
+				$self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'}{'y'}
 				+ $self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'}{'y'});
 		
 		my $visible = 0;
