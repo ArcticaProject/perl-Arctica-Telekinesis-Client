@@ -71,8 +71,15 @@ my $ACO = Arctica::Core::eventInit->new({
 	app_version=>'0.0.1.1'});
 
 my $TeKiClient = Arctica::Telekinesis::Core::Client->new($ACO);
-my $server_sock_id = $TeKiClient->get_tmp_servers_socket_id;
 
+if ($#ARGV == -1) {
+	my $server_sock_id = $TeKiClient->get_tmp_servers_socket_id;
+} else {
+	my $server_sock_id = $ARGV[0];
+	if ($server_sock_id =~ /([a-zA-Z0-9]*)/) {
+		$server_sock_id = $1;
+	} else { die; }
+}
 
 $TeKiClient->{'socks'}{'local'} = Arctica::Core::JABus::Socket->new($ACO,{
 	type	=>	"unix",
