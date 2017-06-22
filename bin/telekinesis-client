@@ -70,7 +70,7 @@ my $ACO = Arctica::Core::eventInit->new({
 	app_class =>'telekinesis-core',
 	app_version=>'0.0.1.1'});
 
-my $TeKiClient = Arctica::Telekinesis::Core::Client->new($ACO);
+my $TeKiClient = Arctica::Telekinesis::Client->new($ACO);
 
 if ($#ARGV == -1) {
 	my $server_sock_id = $TeKiClient->get_tmp_servers_socket_id;
