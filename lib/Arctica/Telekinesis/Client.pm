@@ -160,7 +160,7 @@ sub target_spawn {
 #		my $pid = open(my $fh,"|-",'./forkedmmoverlay.pl',$app_id,$ttid,$self->{'socks'}{'local'}{'_socket_id'});
 
 		        if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'tmplnkid'} =~ /^([a-zA-Z0-9\_\-]*)$/) {
-				system("forkedmmoverlay.pl $app_id $ttid $self->{'socks'}{'local'}{'_socket_id'} $1 &");
+				system("/usr/bin/forkedmmoverlay.pl $app_id $ttid $self->{'socks'}{'local'}{'_socket_id'} $1 &");
 			}
                 }
 	} else {
