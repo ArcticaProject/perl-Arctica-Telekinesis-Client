@@ -110,13 +110,13 @@ sub app_init_win_and_targets {
 	if ($self->{'running_apps'}{$app_id}) {
 #	print "DUMP YOUR RUMP:\t$app_id\t\n",Dumper($init_data);
 		if ($init_data->{'windows'}) {
-			foreach my $wid (sort keys $init_data->{'windows'}) {
+			foreach my $wid (sort keys %{$init_data->{'windows'}}) {
 				print "WINDOW:\t$wid\t\n",#
 				$self->{'running_apps'}{$app_id}{'windows'}{$wid} = $init_data->{'windows'}{$wid};
 			}
 		}
 		if ($init_data->{'targets'}) {
-			foreach my $ttid (sort keys $init_data->{'targets'}) {
+			foreach my $ttid (sort keys %{$init_data->{'targets'}}) {
 				print "TARGETS:\t$ttid\t\n",Dumper($init_data->{'targets'}{$ttid});
 				$self->{'running_apps'}{$app_id}{'targets'}{$ttid} = $init_data->{'targets'}{$ttid};
 				if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}) {
@@ -192,11 +192,11 @@ sub target_state_change {
 	if ($self->{'running_apps'}{$app_id}) {
 		if ($data->{'data'}{'w'}) {
 			print "DATA/W:\n";
-			foreach my $wid (keys $data->{'data'}{'w'}) {
+			foreach my $wid (keys %{$data->{'data'}{'w'}}) {
 				print "\t$wid\n";
 				if ($data->{'data'}{'w'}{$wid} and $self->{'running_apps'}{$app_id}{'windows'}{$wid}) {
 					print "\t\tDEEPER 1\n";
-					foreach my $key (keys $data->{'data'}{'w'}{$wid}) {
+					foreach my $key (keys %{$data->{'data'}{'w'}{$wid}}) {
 						print "\t\t\tDEEPER 2:\t$key\n";
 						if ($data->{'data'}{'w'}{$wid}{$key} ne $self->{'running_apps'}{$app_id}{'windows'}{$wid}{'state'}{$key}) {
 							print "\t\t\t\tD3:\t[$data->{'data'}{'w'}{$wid}{$key}]\t[$self->{'running_apps'}{$app_id}{'windows'}{$wid}{'state'}{$key}]\n";
@@ -205,7 +205,7 @@ sub target_state_change {
 					}
 #					    $self->{'running_apps'}{$app_id}{'windows'}{$wid}{'targets'}
 					if ($self->{'running_apps'}{$app_id}{'windows'}{$wid}{'targets'}) {
-						foreach my $ttid (keys $self->{'running_apps'}{$app_id}{'windows'}{$wid}{'targets'}) {
+						foreach my $ttid (keys %{$self->{'running_apps'}{$app_id}{'windows'}{$wid}{'targets'}}) {
 							$ch_targets{$ttid} = 1;
 							print "\t\t\t\t\tWCHT:$ttid\n";
 						}
@@ -216,11 +216,11 @@ sub target_state_change {
 
 		if ($data->{'data'}{'t'}) {
 			warn("DATA/T:");
-			foreach my $ttid (keys $data->{'data'}{'t'}) {
+			foreach my $ttid (keys %{$data->{'data'}{'t'}}) {
 				print "\t$ttid\n";
 				if ($data->{'data'}{'t'}{$ttid} and $self->{'running_apps'}{$app_id}{'targets'}{$ttid}) {
 					print "\t\tDEEPER 1\n";
-					foreach my $key (keys $data->{'data'}{'t'}{$ttid}) {
+					foreach my $key (keys %{$data->{'data'}{'t'}{$ttid}}) {
 						print "\t\t\tDEEPER 2:\t$key\n";
 						if ($data->{'data'}{'t'}{$ttid}{$key} ne $self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'}{$key}) {
 #							if  ($data->{'data'}{'t'}{$ttid}{'alive'}) {
