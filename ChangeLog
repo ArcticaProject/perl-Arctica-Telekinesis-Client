@@ -1,0 +1,78 @@
+2017-06-23 18:58:56 +0200 Mike Gabriel (d19c847)
+
+	* lib/Arctica/Telekinesis/Client.pm: Avoid keys on references.
+          Forbidden in Debian 9's Perl version anyway. (HEAD ->
+          master, origin/master, gh-arctica/master)
+
+2017-06-23 18:58:21 +0200 Mike Gabriel (e6677c2)
+
+	* bump from version 0.0.0.1 to 0.1.0.0 to supercede the Telekinesis
+          packages found on packages.x2go.org.
+
+2017-06-23 17:45:32 +0200 Mike Gabriel (1678391)
+
+	* FIX ME: Let's run the forkedmmoverlay.pl from /usr/bin for now.
+          This is probably wrong, but functional for now.
+
+2017-06-23 14:00:31 +0200 Mike Gabriel (8c34bd4)
+
+	* Regresssion fix for c00e6c31; declare $server_sock_id one scope
+          level higher.
+
+2017-06-23 13:54:31 +0200 Mike Gabriel (562fa31)
+
+	* debian/control: Add D (telekinesis-client):
+          libarctica-core-jabus-socket-perl.
+
+2017-06-23 13:42:07 +0200 Mike Gabriel (e708f67)
+
+	* debian/control: Add D (libarctica-telekinesis-client-perl):
+          libarctica-core-perl.
+
+2017-06-23 13:28:04 +0200 Mike Gabriel (a9c319a)
+
+	* debian/*: Rename bin:package arctica-telekinesis-client to
+          telekinesis-client~.
+
+2017-06-22 23:57:11 +0200 Mike Gabriel (d8e836d)
+
+	* Fix path of Arctica::Telekinesis::Client.
+
+2017-06-22 23:51:13 +0200 Mike Gabriel (c00e6c3)
+
+	* Support server socket to passed in via ARGV[0]
+
+2017-06-22 23:50:33 +0200 Mike Gabriel (3f1822a)
+
+	* make telekinesis-client executable
+
+2017-06-22 23:13:24 +0200 Mike Gabriel (13f99bb)
+
+	* executables go to /usr/bin
+
+2017-06-21 13:28:37 +0200 Mike Gabriel (d25f72e)
+
+	* Update to latest development status (Arctica Browser development)
+          dating 20170621. (origin/development, origin/HEAD,
+          development)
+
+2016-10-20 21:54:59 +0200 Mike Gabriel (571ce79)
+
+	* README: Fix SEE ALSO section.
+
+2016-10-20 15:19:25 +0200 Mike Gabriel (ccab678)
+
+	* Debianize perl-Arctica-Telekinesis-Client.
+
+2016-10-20 15:19:12 +0200 Mike Gabriel (0a875b4)
+
+	* Add formal stuff for Perl packages.
+
+2016-10-20 15:12:42 +0200 Mike Gabriel (5abf765)
+
+	* Add Version.pm file.
+
+2016-10-20 14:42:47 +0200 GZNGET FOSS Team (3cdb0b2)
+
+	* Initial Commit
+
