@@ -97,7 +97,7 @@ sub new {
 
 sub csapp_reg {
 	my $self = $_[0];
-	print "CSAPPREG:\t$_[1]\n",Dumper(@_),"\n";
+#	print "CSAPPREG:\t$_[1]\n",Dumper(@_),"\n";
 	my $app_id = $_[1];
 	$self->{'running_apps'}{$app_id}{'state'} = 1;
 	$self->{'socks'}{'remote'}->client_send('appinit',$app_id)
@@ -111,13 +111,13 @@ sub app_init_win_and_targets {
 #	print "DUMP YOUR RUMP:\t$app_id\t\n",Dumper($init_data);
 		if ($init_data->{'windows'}) {
 			foreach my $wid (sort keys %{$init_data->{'windows'}}) {
-				print "WINDOW:\t$wid\t\n",#
+#				print "WINDOW:\t$wid\t\n",#
 				$self->{'running_apps'}{$app_id}{'windows'}{$wid} = $init_data->{'windows'}{$wid};
 			}
 		}
 		if ($init_data->{'targets'}) {
 			foreach my $ttid (sort keys %{$init_data->{'targets'}}) {
-				print "TARGETS:\t$ttid\t\n",Dumper($init_data->{'targets'}{$ttid});
+#				print "TARGETS:\t$ttid\t\n",Dumper($init_data->{'targets'}{$ttid});
 				$self->{'running_apps'}{$app_id}{'targets'}{$ttid} = $init_data->{'targets'}{$ttid};
 				if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}) {
 					if ($self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}) {
@@ -147,20 +147,28 @@ sub target_spawn {
 		die("!!!");
 	}
 	
-	print "Spawning target:\t$app_id\n$ttid\n";
+#	print "Spawning target:\t$app_id\n$ttid\n";
 	if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'service'} eq 'multimedia') {
 		if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'tmplnkid'}) {#TMP GARBAGE 
-			print "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n\n\nYAY IT MADE IT THIS FAR\nID:\t$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'tmplnkid'}\n\n";
-
-#			sleep 10;
+#			print "\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n\n\nYAY IT MADE IT THIS FAR\nID:\t$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'tmplnkid'}\n\n";
+#print Dumper($self->{'running_apps'}{$app_id});
 # obviously want to do this in a more elegant and generic fashion! (but Mother::Forker is a bit overkill here since we're going to chitchat on JABus)
 
 #print "<<<<<<<<<<<<<SPAWN>>>>>>>>>>>>>>>>\n";
 
 #		my $pid = open(my $fh,"|-",'./forkedmmoverlay.pl',$app_id,$ttid,$self->{'socks'}{'local'}{'_socket_id'});
-
+			my $mfid = 0;
+			my $rwid = 0;
 		        if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'tmplnkid'} =~ /^([a-zA-Z0-9\_\-]*)$/) {
-				system("/usr/bin/forkedmmoverlay.pl $app_id $ttid $self->{'socks'}{'local'}{'_socket_id'} $1 &");
+				$mfid = $1;
+			}
+		        if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'realwid'} =~ /^([a-zA-Z0-9\_\-]*)$/) {
+				$rwid = $1;
+			}
+
+
+			if (($mfid ne 0)  and ($rwid ne 0)) {
+				system("/home/theuser/arctica/HACK2/convergence/scripts/arctica-mediaplayer-overlay $app_id $ttid $self->{'socks'}{'local'}{'_socket_id'} $mfid $rwid&");
 			}
                 }
 	} else {
@@ -191,15 +199,15 @@ sub target_state_change {
 
 	if ($self->{'running_apps'}{$app_id}) {
 		if ($data->{'data'}{'w'}) {
-			print "DATA/W:\n";
+#			print "DATA/W:\n";
 			foreach my $wid (keys %{$data->{'data'}{'w'}}) {
-				print "\t$wid\n";
+#				print "\t$wid\n";
 				if ($data->{'data'}{'w'}{$wid} and $self->{'running_apps'}{$app_id}{'windows'}{$wid}) {
-					print "\t\tDEEPER 1\n";
+#					print "\t\tDEEPER 1\n";
 					foreach my $key (keys %{$data->{'data'}{'w'}{$wid}}) {
-						print "\t\t\tDEEPER 2:\t$key\n";
+#						print "\t\t\tDEEPER 2:\t$key\n";
 						if ($data->{'data'}{'w'}{$wid}{$key} ne $self->{'running_apps'}{$app_id}{'windows'}{$wid}{'state'}{$key}) {
-							print "\t\t\t\tD3:\t[$data->{'data'}{'w'}{$wid}{$key}]\t[$self->{'running_apps'}{$app_id}{'windows'}{$wid}{'state'}{$key}]\n";
+#							print "\t\t\t\tD3:\t[$data->{'data'}{'w'}{$wid}{$key}]\t[$self->{'running_apps'}{$app_id}{'windows'}{$wid}{'state'}{$key}]\n";
 							$self->{'running_apps'}{$app_id}{'windows'}{$wid}{'state'}{$key} = $data->{'data'}{'w'}{$wid}{$key};
 						}
 					}
@@ -207,7 +215,7 @@ sub target_state_change {
 					if ($self->{'running_apps'}{$app_id}{'windows'}{$wid}{'targets'}) {
 						foreach my $ttid (keys %{$self->{'running_apps'}{$app_id}{'windows'}{$wid}{'targets'}}) {
 							$ch_targets{$ttid} = 1;
-							print "\t\t\t\t\tWCHT:$ttid\n";
+#							print "\t\t\t\t\tWCHT:$ttid\n";
 						}
 					}
 				}
@@ -215,23 +223,23 @@ sub target_state_change {
 		}
 
 		if ($data->{'data'}{'t'}) {
-			warn("DATA/T:");
+#			warn("DATA/T:");
 			foreach my $ttid (keys %{$data->{'data'}{'t'}}) {
-				print "\t$ttid\n";
+#				print "\t$ttid\n";
 				if ($data->{'data'}{'t'}{$ttid} and $self->{'running_apps'}{$app_id}{'targets'}{$ttid}) {
-					print "\t\tDEEPER 1\n";
+#					print "\t\tDEEPER 1\n";
 					foreach my $key (keys %{$data->{'data'}{'t'}{$ttid}}) {
-						print "\t\t\tDEEPER 2:\t$key\n";
+#						print "\t\t\tDEEPER 2:\t$key\n";
 						if ($data->{'data'}{'t'}{$ttid}{$key} ne $self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'}{$key}) {
 #							if  ($data->{'data'}{'t'}{$ttid}{'alive'}) {
 
 
 #							}
-							print "\t\t\t\tD3:\t[$data->{'data'}{'t'}{$ttid}{$key}]\t[$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'}{$key}]\n";
+#							print "\t\t\t\tD3:\t[$data->{'data'}{'t'}{$ttid}{$key}]\t[$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'}{$key}]\n";
 							$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'}{$key} = $data->{'data'}{'t'}{$ttid}{$key};
 						}
 						$ch_targets{$ttid} = 1;
-						print "\t\t\t\t\tTCHT:$ttid\n";
+#						print "\t\t\t\t\tTCHT:$ttid\n";
 					}
 				}
 			}
@@ -245,14 +253,14 @@ sub target_state_change {
 }
 
 sub target_send_state_changes {
-	warn("STATE CHANGE????????????????????????????");# FUCK ME
+#	warn("STATE CHANGE????????????????????????????");# FUCK ME
 	my $self = $_[0];
 	my $app_id = $_[1];
 	my $ttid = $_[2];
 	if ($self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'} and
 		$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'}) 
 	{
-		print "WHAT THE!!:\n",Dumper($self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'});
+#		print "WHAT THE!!:\n",Dumper($self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'});
 #		my %ws = $self->{'running_apps'}{$app_id}{'windows'}{$self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'window'}}{'state'};
 #		my $ts = $self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'state'};
 		
@@ -310,7 +318,7 @@ sub c2s_service_neg {
 # This is just a "dummy" place holder for the real negotiation function
 ################################################################################
 	my $jdata = $_[1];
-	print "SRVCNEG:\t",Dumper($jdata),"\n";
+#	print "SRVCNEG:\t",Dumper($jdata),"\n";
 	if ($jdata->{'step'} eq 2) {
 # Ok so here we're beign told what the server have and if we are newer version than server 
 # we need to check compatibility...
