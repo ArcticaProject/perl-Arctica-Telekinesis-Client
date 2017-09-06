@@ -168,7 +168,7 @@ sub target_spawn {
 
 
 			if (($mfid ne 0)  and ($rwid ne 0)) {
-				system("/home/theuser/arctica/HACK2/convergence/scripts/arctica-mediaplayer-overlay $app_id $ttid $self->{'socks'}{'local'}{'_socket_id'} $mfid $rwid&");
+				system("/usr/bin/arctica-mediaplayer-overlay $app_id $ttid $self->{'socks'}{'local'}{'_socket_id'} $mfid $rwid&");
 			}
                 }
 	} else {
