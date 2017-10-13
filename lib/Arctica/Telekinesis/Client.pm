@@ -84,6 +84,7 @@ sub new {
 		aobject_name => "Telekinesis_Client",
 		available_services => {
 			multimedia => 1,
+			webcontent => 1,
 		},
 	};
 #	$self->{'session_id'} = genARandom('id');
@@ -171,6 +172,14 @@ sub target_spawn {
 				system("/usr/bin/arctica-mediaplayer-overlay $app_id $ttid $self->{'socks'}{'local'}{'_socket_id'} $mfid $rwid&");
 			}
                 }
+	} elsif ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'service'} eq 'webcontent') {
+		my $nxwid = 0;
+		my $rwid = 0;
+		        if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'realwid'} =~ /^([a-zA-Z0-9\_\-]*)$/) {
+				$rwid = $1;
+			}
+		system("/usr/bin/arctica-browser-overlay $app_id $ttid $self->{'socks'}{'local'}{'_socket_id'} $nxwid $rwid&");
+		BugOUT(8,"WebContent!!!");
 	} else {
 		warn("Unknown service $self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'service'}");
 	}
@@ -307,6 +316,7 @@ sub init_c2s_service_neg {
 		step => 1,
 		services => {
 			multimedia => 1,
+			webcontent => 1,
 		}
 	})
 }
@@ -328,6 +338,7 @@ sub c2s_service_neg {
 			step => 3,
 			services => {
 				multimedia => 1,
+				webcontent => 1,
 			}
 		})
 	}
