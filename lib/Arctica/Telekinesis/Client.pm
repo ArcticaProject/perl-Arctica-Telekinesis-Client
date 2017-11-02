@@ -62,12 +62,15 @@ use strict;
 use Exporter qw(import);
 use Data::Dumper;
 use Arctica::Core::eventInit qw( genARandom BugOUT );
+use X11::Protocol;
+
 # Be very selective about what (if any) gets exported by default:
 our @EXPORT = qw();
 # And be mindfull of what we lett the caller request here too:
 our @EXPORT_OK = qw();
 
 my $arctica_core_object;
+my $X11 = X11::Protocol->new();
 
 sub new {
 	BugOUT(9,"TeKi Client new->ENTER");
@@ -175,9 +178,14 @@ sub target_spawn {
 	} elsif ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'service'} eq 'webcontent') {
 		my $nxwid = 0;
 		my $rwid = 0;
-		        if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'realwid'} =~ /^([a-zA-Z0-9\_\-]*)$/) {
-				$rwid = $1;
-			}
+		if ($self->{'running_apps'}{$app_id}{'targets'}{$ttid}{'realwid'} =~ /^([a-zA-Z0-9\_\-]*)$/) {
+			$rwid = $1;
+		}
+		if ($self->{'nx'}{'clientnxwid'} =~ /^([\da-zA-Z]{4,})$/) {
+			$ENV{'TEKINXWID'} = $1;
+		} else {
+			warn("clientnxwid not set?  this will probably cause problems!?");
+		}
 		system("/usr/bin/arctica-browser-overlay $app_id $ttid $self->{'socks'}{'local'}{'_socket_id'} $nxwid $rwid&");
 		BugOUT(8,"WebContent!!!");
 	} else {
@@ -334,6 +342,21 @@ sub c2s_service_neg {
 # we need to check compatibility...
 # Send server a final list of services we'll be able to provide.
 		BugOUT(9,"Service Negotiation Step 2");
+
+		if ($jdata->{'clientnxwid'} =~ /^([\da-zA-Z]{4,})$/) {
+			my $hex = hex $1;
+			warn($hex);
+			my (undef, $nxwinparent) = $X11->QueryTree($hex);
+			if ($nxwinparent =~ /^([\da-zA-Z]{4,})$/) {
+				$self->{'nx'}{'clientnxwid'} = sprintf("0x%X", $1);
+				BugOUT(8,"NXWINID: $self->{'nx'}{'clientnxwid'} ($jdata->{'clientnxwid'})");
+			} else {
+				warn("parent of clientnxwid not found?");
+			}
+		} else {
+			warn("clientnxwid not set?!!!");
+		}
+
 		$self->{'socks'}{'remote'}->client_send('srvcneg',{
 			step => 3,
 			services => {
