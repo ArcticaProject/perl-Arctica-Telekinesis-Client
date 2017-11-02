@@ -20,6 +20,7 @@ Depends:
  ${perl:Depends},
  ${misc:Depends},
  libarctica-core-perl,
+ libx11-protocol-perl,
 Description: Arctica Telekinesis Client (Perl module)
  The Arctica Project brings forth a remote computing framework of
  enterprise grade and quality. The Arctica Framework is a highly
